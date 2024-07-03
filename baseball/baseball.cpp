@@ -15,14 +15,27 @@ public:
 		assertIllegalArgument(guessNumber);
 
 		if (guessNumber == question) {
-			return { true, 3, 0 };
+			return { true, MAX_NUMBER, 0 };
 		}
-		return { false, 0, 0 };
+
+		for (int i = 0; i < MAX_NUMBER; i++) {
+			if (guessNumber[i] == question[i]) {
+				result.strikes++;
+			}
+			else {
+				for (int j = 0; j < MAX_NUMBER; j++) {
+					if (i == j) continue;
+					if (guessNumber[i] == question[j])
+						result.balls++;
+				}
+			}
+		}		
+		return { false, result.strikes, result.balls };
 	}
 
 	void assertIllegalArgument(const std::string& guessNumber)
 	{
-		if (guessNumber.length() != 3) {
+		if (guessNumber.length() != MAX_NUMBER) {
 			throw length_error("Must be three letters.");
 		}
 
@@ -42,6 +55,9 @@ public:
 			guessNumber[1] == guessNumber[2] ||
 			guessNumber[2] == guessNumber[0]);
 	}
+
+	const int MAX_NUMBER = 3;
 private:
 	string question;
+	GuessResult result = { false, 0, 0 };
 };
